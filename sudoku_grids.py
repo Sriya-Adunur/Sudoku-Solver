@@ -86,9 +86,6 @@ def valid_grid(grid):
                 return False
     return True
 
-
-
-
 def valid_num(grid, row, col):
     i = 1
     while i < 10:
@@ -122,14 +119,15 @@ def valid_b(grid, row, col):
 
 def replace_b(grid, row, col):
     num = grid[row][col]
-    i = 1
-    while i < 10:
-        grid[row][col] = i
-        if check_row(grid, row) and check_col(grid, col) and check_subgrid(grid, row, col) and i != num:
-            return i
+    num = num + 1
+    while num < 10:
+        grid[row][col] = num
+        if check_row(grid, row) and check_col(grid, col) and check_subgrid(grid, row, col):
+            return num
+          
         else:
-            i = i + 1
-                     
+            num = num + 1
+    return 0                     
 
 def backtrack(grid, gcpy, row, col):
     gcpy[row][col] = 0
@@ -148,7 +146,14 @@ def backtrack(grid, gcpy, row, col):
                 j = j - 1
         elif valid_b(gcpy, i, j):
             gcpy[i][j] = replace_b(gcpy, i, j)
-            return gcpy
+            if gcpy[i][j] != 0:
+                return gcpy, i, j
+            else:
+                if j == 0:
+                    j = 8
+                    i = i - 1
+                else:
+                    j = j - 1
         else:
             gcpy[i][j] = 0
             if j == 0:
@@ -156,7 +161,6 @@ def backtrack(grid, gcpy, row, col):
                 i = i - 1
             else:
                 j = j - 1
-    
     
 
 def fill_grid(grid):
@@ -173,12 +177,14 @@ def fill_grid(grid):
     row = 0
     col = 0
     while row < 9 and col < 9:
+        print(row, col, gcpy)
         if grid[row][col] != 0:
             col = col
         elif valid_num(gcpy, row, col):
             gcpy[row][col] = replace(gcpy, row, col)
         else:
-            gcpy = backtrack(grid, gcpy, row, col)
+            gcpy, row, col = backtrack(grid, gcpy, row, col)
+            print("backtrack",row, col)
         if col == 8:
             col = 0
             row = row + 1
