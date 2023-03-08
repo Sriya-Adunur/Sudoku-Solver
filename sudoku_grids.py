@@ -177,14 +177,12 @@ def fill_grid(grid):
     row = 0
     col = 0
     while row < 9 and col < 9:
-        print(row, col, gcpy)
         if grid[row][col] != 0:
             col = col
         elif valid_num(gcpy, row, col):
             gcpy[row][col] = replace(gcpy, row, col)
         else:
             gcpy, row, col = backtrack(grid, gcpy, row, col)
-            print("backtrack",row, col)
         if col == 8:
             col = 0
             row = row + 1
