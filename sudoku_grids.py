@@ -106,15 +106,15 @@ def replace(grid, row, col):
             i = i + 1
 
 def valid_b(grid, row, col):
-    num = grid[row][col] 
-    i = 1 
-    while i < 10:
-        grid[row][col] = i
-        if check_row(grid, row) and check_col(grid, col) and check_subgrid(grid, row, col) and i != num:
-            grid[row][col] = num
+    orig = grid[row][col] 
+    num = orig + 1 
+    while num < 10:
+        grid[row][col] = num
+        if check_row(grid, row) and check_col(grid, col) and check_subgrid(grid, row, col):
+            grid[row][col] = orig
             return True
         else:
-            i = i + 1
+            num = num + 1
     return False
 
 def replace_b(grid, row, col):
@@ -124,10 +124,8 @@ def replace_b(grid, row, col):
         grid[row][col] = num
         if check_row(grid, row) and check_col(grid, col) and check_subgrid(grid, row, col):
             return num
-          
         else:
-            num = num + 1
-    return 0                     
+            num = num + 1         
 
 def backtrack(grid, gcpy, row, col):
     gcpy[row][col] = 0
@@ -137,7 +135,7 @@ def backtrack(grid, gcpy, row, col):
     else:
         j = col - 1
         i = row
-    while i >= 0 and  j >= 0:
+    while i >= 0 and j >= 0:
         if grid[i][j] != 0:
             if j == 0:
                 j = 8
@@ -146,14 +144,7 @@ def backtrack(grid, gcpy, row, col):
                 j = j - 1
         elif valid_b(gcpy, i, j):
             gcpy[i][j] = replace_b(gcpy, i, j)
-            if gcpy[i][j] != 0:
-                return gcpy, i, j
-            else:
-                if j == 0:
-                    j = 8
-                    i = i - 1
-                else:
-                    j = j - 1
+            return gcpy, i, j
         else:
             gcpy[i][j] = 0
             if j == 0:
